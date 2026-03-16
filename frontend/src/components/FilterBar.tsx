@@ -36,11 +36,7 @@ const ZIP_GROUPS = [
   { label: 'Bolligen', zips: ['3065'] },
 ];
 
-// Alle PLZ-Gruppen zusammengeführt (für "Alle Region Bern")
-const ALL_REGION_ZIPS = Array.from(new Set(ZIP_GROUPS.flatMap(g => g.zips)));
-
 export function FilterBar({ filters, onChange, totalCount }: Props) {
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [zipText, setZipText] = useState(''); // Freie PLZ-Eingabe
 
   // Einzelne Filter ändern ohne den Rest zu verlieren
