@@ -11,7 +11,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import type { Listing, ListingFilters, ScrapeSource } from './types';
+import type { Listing, ListingFilters, ScrapeSource, SearchProfile, SearchProfileInput } from './types';
 
 // Supabase Client (Anon Key – öffentlich, RLS schützt die Daten)
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -22,6 +22,79 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// ── Auth ───────────────────────────────────────────────────
+
+/** Aktuell eingeloggter User (null = ausgeloggt) */
+export async function getCurrentUser() {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
+}
+
+/** Einloggen mit E-Mail + Passwort */
+export async function signIn(email: string, password: string) {
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+}
+
+/** Registrieren mit E-Mail + Passwort */
+export async function signUp(email: string, password: string) {
+  const { error } = await supabase.auth.signUp({ email, password });
+  if (error) throw error;
+}
+
+/** Ausloggen */
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
+}
+
+// ── Suchprofile ────────────────────────────────────────────
+
+/** Alle Suchprofile des aktuellen Users laden */
+export async function fetchSearchProfiles(): Promise<SearchProfile[]> {
+  const { data, error } = await supabase
+    .from('search_profiles')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as SearchProfile[];
+}
+
+/** Neues Suchprofil erstellen */
+export async function createSearchProfile(input: SearchProfileInput): Promise<SearchProfile> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Nicht eingeloggt');
+
+  const { data, error } = await supabase
+    .from('search_profiles')
+    .insert({ ...input, user_id: user.id })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as SearchProfile;
+}
+
+/** Suchprofil aktualisieren */
+export async function updateSearchProfile(id: string, input: Partial<SearchProfileInput>): Promise<SearchProfile> {
+  const { data, error } = await supabase
+    .from('search_profiles')
+    .update(input)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as SearchProfile;
+}
+
+/** Suchprofil löschen */
+export async function deleteSearchProfile(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('search_profiles')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
 
 // ── Listings ───────────────────────────────────────────────
 

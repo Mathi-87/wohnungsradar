@@ -80,6 +80,31 @@ export interface ListingFilters {
   offset?: number;
 }
 
+/**
+ * Suchprofil – definiert Kriterien für automatische Benachrichtigungen.
+ * Gehört einem eingeloggten User (user_id = Supabase Auth UUID).
+ */
+export interface SearchProfile {
+  id: string;
+  user_id: string;
+  name: string;
+  zip_codes: string[] | null;   // PLZ-Filter, z.B. ["3011","3012"]
+  rooms_min: number | null;
+  rooms_max: number | null;
+  rent_gross_max: number | null;
+  area_min: number | null;
+  has_garden: boolean;
+  has_balcony: boolean;
+  has_lift: boolean;
+  is_minergie: boolean;
+  notify_email: boolean;        // E-Mail-Benachrichtigung aktiv?
+  is_active: boolean;
+  created_at: string;
+}
+
+// Felder die beim Erstellen / Bearbeiten ausgefüllt werden
+export type SearchProfileInput = Omit<SearchProfile, 'id' | 'user_id' | 'created_at'>;
+
 export interface ScrapeSource {
   id: string;
   name: string;
