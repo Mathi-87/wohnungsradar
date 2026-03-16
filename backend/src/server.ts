@@ -10,6 +10,8 @@ import express from 'express';
 import cors from 'cors';
 import { listingsRouter } from './routes/listings';
 import { sourcesRouter } from './routes/sources';
+import { scraperRouter } from './routes/scraper';
+import { startScheduler } from './scrapers/scheduler';
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -42,12 +44,25 @@ app.use('/api/listings', listingsRouter);
 // GET /api/sources           → Alle Quellen mit Status
 app.use('/api/sources', sourcesRouter);
 
+// Scraper-API: Scraper manuell auslösen
+// POST /api/scraper/run         → Alle Scraper starten
+// POST /api/scraper/run/flatfox → Einzelnen Scraper starten
+// GET  /api/scraper/status      → Läuft gerade ein Scraper?
+app.use('/api/scraper', scraperRouter);
+
 // ── Server starten ─────────────────────────────────────────
 
 app.listen(PORT, () => {
   console.log(`✅ WohnungsRadar Backend läuft auf Port ${PORT}`);
-  console.log(`   Health-Check: http://localhost:${PORT}/health`);
-  console.log(`   Listings API: http://localhost:${PORT}/api/listings`);
+  console.log(`   Health-Check:  http://localhost:${PORT}/health`);
+  console.log(`   Listings API:  http://localhost:${PORT}/api/listings`);
+  console.log(`   Scraper-Trigger: POST http://localhost:${PORT}/api/scraper/run`);
+
+  // Automatischen Scraper-Scheduler starten
+  // (deaktivieren mit DISABLE_SCHEDULER=true in .env)
+  if (process.env.DISABLE_SCHEDULER !== 'true') {
+    startScheduler();
+  }
 });
 
 export default app;
