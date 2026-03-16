@@ -46,11 +46,7 @@ function App() {
       setListings(result.listings ?? []);
       setTotalCount(result.total ?? result.listings?.length ?? 0);
     } catch (err: any) {
-      if (err.code === 'ERR_NETWORK') {
-        setError('Keine Verbindung zum Backend. Läuft der Server? (npm run dev im backend-Ordner)');
-      } else {
-        setError('Fehler beim Laden der Inserate');
-      }
+      setError('Fehler beim Laden der Inserate. Sind VITE_SUPABASE_URL und VITE_SUPABASE_ANON_KEY in der .env gesetzt?');
     } finally {
       setLoading(false);
     }
