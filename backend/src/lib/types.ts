@@ -71,19 +71,37 @@ export interface Listing {
 
 // Filter-Parameter für die Listings-API
 export interface ListingFilters {
-  zip_codes?: string[];       // PLZ-Filter z.B. ['3097', '3084']
-  rooms_min?: number;         // Mindest-Zimmeranzahl
-  rooms_max?: number;         // Max-Zimmeranzahl
-  rent_max?: number;          // Maximale Bruttomiete
-  area_min?: number;          // Mindestfläche in m²
+  // Geografisch
+  zip_codes?: string[];         // PLZ-Filter z.B. ['3097', '3084']
+  // Zimmer
+  rooms_min?: number;           // Mindest-Zimmeranzahl
+  rooms_max?: number;           // Max-Zimmeranzahl
+  // Miete
+  rent_min?: number;            // Minimale Bruttomiete
+  rent_max?: number;            // Maximale Bruttomiete
+  // Fläche
+  area_min?: number;            // Mindestfläche in m²
+  area_max?: number;            // Maximalfläche in m²
+  // Ausstattung
   has_garden?: boolean;
   has_terrace?: boolean;
   has_balcony?: boolean;
+  has_lift?: boolean;
+  has_own_washer?: boolean;
+  has_parking?: boolean;
   is_minergie?: boolean;
-  source?: string;            // Filter nach Quelle
-  is_active?: boolean;        // Standard: true
-  limit?: number;             // Max. Anzahl Resultate (Standard: 50)
-  offset?: number;            // Für Paginierung
+  is_child_friendly?: boolean;
+  // Freitextsuche
+  search?: string;              // Suche in Titel und Adresse
+  // Quelle und Status
+  source?: string;              // Filter nach Quelle
+  is_active?: boolean;          // Standard: true
+  // Sortierung
+  sort_by?: 'first_seen_at' | 'rent_gross' | 'rooms' | 'area_m2';
+  sort_order?: 'asc' | 'desc';
+  // Paginierung
+  limit?: number;               // Max. Anzahl Resultate (Standard: 50)
+  offset?: number;              // Für Paginierung
 }
 
 // Eine Scraping-Quelle

@@ -29,16 +29,27 @@ export async function fetchListings(filters: ListingFilters = {}): Promise<{
   // Filter in Query-Parameter umwandeln
   const params: Record<string, string> = {};
 
-  if (filters.zip_codes?.length) params.zip_codes = filters.zip_codes.join(',');
-  if (filters.rooms_min !== undefined) params.rooms_min = String(filters.rooms_min);
-  if (filters.rooms_max !== undefined) params.rooms_max = String(filters.rooms_max);
-  if (filters.rent_max !== undefined) params.rent_max = String(filters.rent_max);
-  if (filters.area_min !== undefined) params.area_min = String(filters.area_min);
-  if (filters.has_garden) params.has_garden = 'true';
-  if (filters.is_minergie) params.is_minergie = 'true';
-  if (filters.source) params.source = filters.source;
-  if (filters.limit !== undefined) params.limit = String(filters.limit);
-  if (filters.offset !== undefined) params.offset = String(filters.offset);
+  if (filters.zip_codes?.length)        params.zip_codes        = filters.zip_codes.join(',');
+  if (filters.rooms_min !== undefined)  params.rooms_min        = String(filters.rooms_min);
+  if (filters.rooms_max !== undefined)  params.rooms_max        = String(filters.rooms_max);
+  if (filters.rent_min  !== undefined)  params.rent_min         = String(filters.rent_min);
+  if (filters.rent_max  !== undefined)  params.rent_max         = String(filters.rent_max);
+  if (filters.area_min  !== undefined)  params.area_min         = String(filters.area_min);
+  if (filters.area_max  !== undefined)  params.area_max         = String(filters.area_max);
+  if (filters.has_garden)               params.has_garden       = 'true';
+  if (filters.has_terrace)              params.has_terrace      = 'true';
+  if (filters.has_balcony)              params.has_balcony      = 'true';
+  if (filters.has_lift)                 params.has_lift         = 'true';
+  if (filters.has_own_washer)           params.has_own_washer   = 'true';
+  if (filters.has_parking)              params.has_parking      = 'true';
+  if (filters.is_minergie)              params.is_minergie      = 'true';
+  if (filters.is_child_friendly)        params.is_child_friendly = 'true';
+  if (filters.search)                   params.search           = filters.search;
+  if (filters.source)                   params.source           = filters.source;
+  if (filters.sort_by)                  params.sort_by          = filters.sort_by;
+  if (filters.sort_order)               params.sort_order       = filters.sort_order;
+  if (filters.limit   !== undefined)    params.limit            = String(filters.limit);
+  if (filters.offset  !== undefined)    params.offset           = String(filters.offset);
 
   const response = await http.get('/api/listings', { params });
   return response.data;

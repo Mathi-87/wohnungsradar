@@ -47,15 +47,35 @@ export interface Listing {
 }
 
 export interface ListingFilters {
+  // Geografisch
   zip_codes?: string[];
+  // Zimmer
   rooms_min?: number;
   rooms_max?: number;
+  // Miete
+  rent_min?: number;
   rent_max?: number;
+  // Fläche
   area_min?: number;
+  area_max?: number;
+  // Ausstattung (true = Filter aktiv, undefined = egal)
   has_garden?: boolean;
+  has_terrace?: boolean;
+  has_balcony?: boolean;
+  has_lift?: boolean;
+  has_own_washer?: boolean;
+  has_parking?: boolean;
   is_minergie?: boolean;
+  is_child_friendly?: boolean;
+  // Freitextsuche (Titel / Adresse)
+  search?: string;
+  // Quelle und Status
   source?: string;
   is_active?: boolean;
+  // Sortierung
+  sort_by?: 'first_seen_at' | 'rent_gross' | 'rooms' | 'area_m2';
+  sort_order?: 'asc' | 'desc';
+  // Paginierung
   limit?: number;
   offset?: number;
 }

@@ -13,6 +13,7 @@ import axios, { AxiosInstance } from 'axios';
 import { supabaseAdmin } from '../lib/supabase';
 import { Listing } from '../lib/types';
 import { computeDedupHash, findDuplicate } from './deduplicator';
+import { processNotifications } from '../lib/notifications';
 
 // Partial<Listing> = Listing-Objekt, aber alle Felder optional
 // Der Scraper liefert nur die Felder die er kennt
@@ -88,10 +89,11 @@ export abstract class BaseScraper {
     let newCount = 0;
     let updatedCount = 0;
     let errorCount = 0;
+    const newListingIds: string[] = [];  // IDs der wirklich neuen Inserate (für Benachrichtigungen)
 
     for (const listing of listings) {
       try {
-        const result = await this.saveOrUpdate(listing);
+        const result = await this.saveOrUpdate(listing, newListingIds);
         if (result === 'new') newCount++;
         else if (result === 'updated') updatedCount++;
       } catch (err) {
@@ -104,13 +106,25 @@ export abstract class BaseScraper {
     await this.updateSourceStatus(null);
 
     console.log(`[${this.sourceName}] Fertig: ${newCount} neu, ${updatedCount} aktualisiert, ${errorCount} Fehler`);
+
+    // Benachrichtigungen für neue Inserate versenden (asynchron, blockiert nicht)
+    if (newListingIds.length > 0) {
+      processNotifications(newListingIds).catch(err =>
+        console.error(`[${this.sourceName}] Benachrichtigungs-Fehler:`, err)
+      );
+    }
+
     return { newCount, updatedCount, errorCount };
   }
 
   /**
    * Speichert ein Inserat neu oder aktualisiert den last_seen_at-Zeitstempel.
+   * Neue Inserate werden in newListingIds eingetragen (für Benachrichtigungen).
    */
-  private async saveOrUpdate(listing: ScrapedListing): Promise<'new' | 'updated' | 'skipped'> {
+  private async saveOrUpdate(
+    listing: ScrapedListing,
+    newListingIds: string[],
+  ): Promise<'new' | 'updated' | 'skipped'> {
     // Dedup-Hash berechnen (aus Adresse + Zimmer + Fläche + Miete)
     const hash = computeDedupHash(listing);
 
@@ -126,17 +140,20 @@ export abstract class BaseScraper {
       return 'updated';
     }
 
-    // Neues Inserat speichern
-    const { error } = await supabaseAdmin
+    // Neues Inserat speichern und zurückgegebene ID merken
+    const { data, error } = await supabaseAdmin
       .from('listings')
       .insert({
         ...listing,
         dedup_hash: hash,
         first_seen_at: new Date().toISOString(),
         last_seen_at: new Date().toISOString(),
-      });
+      })
+      .select('id')
+      .single();
 
     if (error) throw error;
+    if (data?.id) newListingIds.push(data.id);
     return 'new';
   }
 
