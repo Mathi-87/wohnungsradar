@@ -2,7 +2,7 @@ services:
   # Backend: Node.js API + Scraper
   - type: web
     name: wohnungsradar-backend
-    runtime: node
+    env: node
     rootDir: backend
     buildCommand: npm install && npm run build
     startCommand: npm start
@@ -21,7 +21,7 @@ services:
   # Frontend: React + Vite (Static Site)
   - type: web
     name: wohnungsradar-frontend
-    runtime: static
+    env: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
