@@ -1,0 +1,19 @@
+# Abhängigkeiten
+node_modules/
+
+# Build-Output
+dist/
+
+# Umgebungsvariablen (NIE einchecken – enthält Secrets!)
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
