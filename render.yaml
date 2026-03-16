@@ -1,0 +1,28 @@
+services:
+  # Backend: Node.js API + Scraper
+  - type: web
+    name: wohnungsradar-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false   # wird manuell im Render Dashboard eingetragen
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false   # wird manuell im Render Dashboard eingetragen
+      - key: FRONTEND_URL
+        sync: false   # wird nach Frontend-Deploy eingetragen
+
+  # Frontend: React + Vite (Static Site)
+  - type: web
+    name: wohnungsradar-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false   # wird manuell im Render Dashboard eingetragen
