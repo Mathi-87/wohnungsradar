@@ -3,6 +3,7 @@ services:
   - type: web
     name: wohnungsradar-backend
     env: node
+    plan: free
     rootDir: backend
     buildCommand: npm install && npm run build
     startCommand: npm start
@@ -22,6 +23,7 @@ services:
   - type: web
     name: wohnungsradar-frontend
     env: static
+    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
