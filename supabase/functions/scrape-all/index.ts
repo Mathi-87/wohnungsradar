@@ -27,7 +27,7 @@ serve(async (_req) => {
     'Authorization': `Bearer ${serviceKey}`,
   };
 
-  const scrapers = ['scrape-flatfox', 'scrape-homegate', 'scrape-immoscout24'];
+  const scrapers = ['scrape-flatfox', 'scrape-homegate', 'scrape-immoscout24', 'scrape-newhome'];
   const results: ScrapeResult[] = [];
   const allNewListingIds: string[] = [];
 

@@ -22,5 +22,8 @@ verify_jwt = false
 [functions.scrape-all]
 verify_jwt = false
 
+[functions.scrape-newhome]
+verify_jwt = false
+
 [functions.send-notifications]
 verify_jwt = false

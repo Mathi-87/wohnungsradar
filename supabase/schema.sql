@@ -260,7 +260,7 @@ INSERT INTO scrape_sources (name, tier, type, display_name, base_url, scrape_url
   ('homegate',      1, 'portal',         'Homegate.ch',       'https://www.homegate.ch',       'https://www.homegate.ch/mieten/wohnung/kanton-bern/trefferliste',   60,  'Grösste Plattform CH. Dynamisches Rendering, evtl. Puppeteer nötig.'),
   ('immoscout24',   1, 'portal',         'ImmoScout24.ch',    'https://www.immoscout24.ch',    'https://www.immoscout24.ch/de/wohnung/mieten/kanton-bern',          60,  'Zweitgrösste Plattform. Dynamisches Rendering, evtl. Puppeteer nötig.'),
   ('flatfox',       1, 'portal',         'Flatfox.ch',        'https://flatfox.ch',            'https://flatfox.ch/de/search/?east=7.647&west=7.247&north=47.05&south=46.85',  60,  'Viele kleinere Verwaltungen. Relativ offene Struktur, wahrscheinlich JSON-API vorhanden.'),
-  ('newhome',       1, 'portal',         'Newhome.ch',        'https://www.newhome.ch',        NULL,                                                                60,  'Kantonalbank-Portal.'),
+  ('newhome',       1, 'portal',         'Newhome.ch',        'https://www.newhome.ch',        'https://www.newhome.ch/de/wohnung/mieten/kanton-bern/?r=4&priceToGross=3500&sortBy=date_desc',  60,  'Kantonalbank-Portal (Neue Aargauer Bank, BEKB, etc.)'),
 
   -- Tier 2: Verwaltungen (alle 4 Stunden)
   ('von_graffenried', 2, 'verwaltung',   'Von Graffenried AG', 'https://www.graffenried-liegenschaften.ch', NULL,                                                  240, 'Köniz, Schliern, Bern'),

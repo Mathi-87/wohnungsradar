@@ -1,5 +1,6 @@
 services:
-  # Frontend: React + Vite (Static Site - kostenlos)
+  # Frontend: React + Vite als Static Site (kostenlos auf Render)
+  # Alle Daten kommen direkt von Supabase – kein separates Backend nötig.
   - type: web
     name: wohnungsradar-frontend
     env: static
@@ -7,5 +8,8 @@ services:
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     envVars:
-      - key: VITE_API_URL
-        sync: false   # Backend-URL, wird später eingetragen
+      # Supabase-Verbindung: im Render Dashboard unter Environment eintragen
+      - key: VITE_SUPABASE_URL
+        sync: false   # https://DEINPROJEKT.supabase.co
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false   # eyJ... (öffentlicher Anon Key, sicher im Browser)
