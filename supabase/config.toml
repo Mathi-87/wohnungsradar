@@ -25,5 +25,35 @@ verify_jwt = false
 [functions.scrape-newhome]
 verify_jwt = false
 
+[functions.scrape-livit]
+verify_jwt = false
+
+[functions.scrape-wincasa]
+verify_jwt = false
+
+[functions.scrape-von-graffenried]
+verify_jwt = false
+
+[functions.scrape-burgergemeinde]
+verify_jwt = false
+
+[functions.scrape-immo-stadt-bern]
+verify_jwt = false
+
+[functions.scrape-pvk-bern]
+verify_jwt = false
+
+[functions.scrape-fambau]
+verify_jwt = false
+
+[functions.scrape-ebg-bern]
+verify_jwt = false
+
+[functions.scrape-wogeno]
+verify_jwt = false
+
+[functions.scrape-wbg-neuhaus]
+verify_jwt = false
+
 [functions.send-notifications]
 verify_jwt = false
