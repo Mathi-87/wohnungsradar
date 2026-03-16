@@ -45,5 +45,6 @@ export interface ScrapeResult {
   newCount: number;
   updatedCount: number;
   errorCount: number;
+  newListingIds: string[];  // IDs der wirklich neuen Inserate (für Benachrichtigungen)
   error?: string;
 }

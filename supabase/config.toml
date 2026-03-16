@@ -1,0 +1,26 @@
+# Supabase CLI Konfiguration für WohnungsRadar
+# Dokumentation: https://supabase.com/docs/reference/cli/config
+
+[project]
+# Deine Supabase Project Reference ID
+# Zu finden unter: Supabase Dashboard → Settings → General → Reference ID
+id = "DEINE-PROJECT-REF"
+
+# ── Edge Functions ──────────────────────────────────────────
+# verify_jwt = false: Die Scraper werden von pg_cron aufgerufen (kein User-Token)
+# Sicherheit wird über den Authorization-Header (Service Role Key) gewährleistet.
+
+[functions.scrape-flatfox]
+verify_jwt = false
+
+[functions.scrape-homegate]
+verify_jwt = false
+
+[functions.scrape-immoscout24]
+verify_jwt = false
+
+[functions.scrape-all]
+verify_jwt = false
+
+[functions.send-notifications]
+verify_jwt = false

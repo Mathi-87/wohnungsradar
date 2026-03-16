@@ -11,7 +11,7 @@ import { getSupabaseAdmin } from './supabase-client.ts';
 import { computeDedupHash, findDuplicate } from './deduplicator.ts';
 import type { ScrapedListing, ScrapeResult } from './types.ts';
 
-// Speichert alle gescrapten Inserate und gibt Statistik zurück
+// Speichert alle gescrapten Inserate und gibt Statistik + neue IDs zurück
 export async function runScraper(
   sourceName: string,
   listings: ScrapedListing[],
@@ -20,6 +20,7 @@ export async function runScraper(
   let newCount = 0;
   let updatedCount = 0;
   let errorCount = 0;
+  const newListingIds: string[] = [];
 
   for (const listing of listings) {
     try {
@@ -34,16 +35,20 @@ export async function runScraper(
           .eq('id', existingId);
         updatedCount++;
       } else {
-        // Neues Inserat speichern
-        const { error } = await supabase
+        // Neues Inserat speichern und ID merken (für Benachrichtigungen)
+        const { data, error } = await supabase
           .from('listings')
           .insert({
             ...listing,
             dedup_hash: hash,
             first_seen_at: new Date().toISOString(),
             last_seen_at: new Date().toISOString(),
-          });
+          })
+          .select('id')
+          .single();
+
         if (error) throw error;
+        if (data?.id) newListingIds.push(data.id);
         newCount++;
       }
     } catch (err) {
@@ -63,7 +68,7 @@ export async function runScraper(
     .eq('name', sourceName);
 
   console.log(`[${sourceName}] Fertig: ${newCount} neu, ${updatedCount} aktualisiert, ${errorCount} Fehler`);
-  return { source: sourceName, newCount, updatedCount, errorCount };
+  return { source: sourceName, newCount, updatedCount, errorCount, newListingIds };
 }
 
 // Speichert einen Fehler in scrape_sources

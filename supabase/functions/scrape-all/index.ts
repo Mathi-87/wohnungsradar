@@ -1,7 +1,9 @@
 /**
  * Scrape-All Orchestrator – Supabase Edge Function
  *
- * Ruft alle Scraper nacheinander auf und gibt eine Zusammenfassung zurück.
+ * Ruft alle Scraper nacheinander auf, sammelt neue Inserat-IDs
+ * und löst anschliessend den Benachrichtigungs-Service aus.
+ *
  * Wird stündlich via pg_cron automatisch ausgeführt.
  * Kann auch manuell über das Frontend ausgelöst werden.
  */
@@ -20,7 +22,6 @@ serve(async (_req) => {
     });
   }
 
-  // Auth-Header für interne Edge Function Aufrufe
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${serviceKey}`,
@@ -28,10 +29,11 @@ serve(async (_req) => {
 
   const scrapers = ['scrape-flatfox', 'scrape-homegate', 'scrape-immoscout24'];
   const results: ScrapeResult[] = [];
+  const allNewListingIds: string[] = [];
 
   console.log('[scrape-all] Starte alle Scraper...');
 
-  // Scraper nacheinander ausführen (nicht parallel – Rate-Limiting)
+  // Scraper nacheinander ausführen (nicht parallel – Rate-Limiting pro Domain)
   for (const scraper of scrapers) {
     try {
       console.log(`[scrape-all] Starte ${scraper}...`);
@@ -43,16 +45,44 @@ serve(async (_req) => {
       if (response.ok) {
         const result: ScrapeResult = await response.json();
         results.push(result);
-        console.log(`[scrape-all] ${scraper} fertig:`, result);
+        // Neue Inserat-IDs für Benachrichtigungen sammeln
+        if (result.newListingIds?.length) {
+          allNewListingIds.push(...result.newListingIds);
+        }
+        console.log(`[scrape-all] ${scraper} fertig: ${result.newCount} neu, ${result.updatedCount} aktualisiert`);
       } else {
         const errorText = await response.text();
         console.error(`[scrape-all] ${scraper} Fehler (${response.status}):`, errorText);
-        results.push({ source: scraper, newCount: 0, updatedCount: 0, errorCount: 1, error: errorText });
+        results.push({
+          source: scraper,
+          newCount: 0, updatedCount: 0, errorCount: 1,
+          newListingIds: [],
+          error: errorText,
+        });
       }
     } catch (err) {
       const msg = String(err);
       console.error(`[scrape-all] ${scraper} Exception:`, msg);
-      results.push({ source: scraper, newCount: 0, updatedCount: 0, errorCount: 1, error: msg });
+      results.push({
+        source: scraper,
+        newCount: 0, updatedCount: 0, errorCount: 1,
+        newListingIds: [],
+        error: msg,
+      });
+    }
+  }
+
+  // Benachrichtigungen für neue Inserate versenden
+  if (allNewListingIds.length > 0) {
+    console.log(`[scrape-all] Sende Benachrichtigungen für ${allNewListingIds.length} neue Inserate...`);
+    try {
+      await fetch(`${supabaseUrl}/functions/v1/send-notifications`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ newListingIds: allNewListingIds }),
+      });
+    } catch (err) {
+      console.error('[scrape-all] Benachrichtigungs-Fehler:', err);
     }
   }
 
