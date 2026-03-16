@@ -11,6 +11,8 @@ services:
         value: production
       - key: SUPABASE_URL
         sync: false   # wird manuell im Render Dashboard eingetragen
+      - key: SUPABASE_ANON_KEY
+        sync: false   # wird manuell im Render Dashboard eingetragen
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false   # wird manuell im Render Dashboard eingetragen
       - key: FRONTEND_URL
