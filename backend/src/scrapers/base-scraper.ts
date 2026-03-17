@@ -165,15 +165,28 @@ export abstract class BaseScraper {
 
   /**
    * Aktualisiert den Status der Quelle in der scrape_sources-Tabelle.
+   * Erstellt den Eintrag automatisch falls er noch nicht existiert (upsert).
    * error = null → Erfolg; error = string → Fehlermeldung
    */
   private async updateSourceStatus(error: string | null): Promise<void> {
     await supabaseAdmin
       .from('scrape_sources')
-      .update({
-        last_scraped_at: new Date().toISOString(),
-        last_error: error,
-      })
-      .eq('name', this.sourceName);
+      .upsert(
+        {
+          name: this.sourceName,
+          last_scraped_at: new Date().toISOString(),
+          last_error: error,
+          // Pflichtfelder beim ersten Erstellen
+          tier: this.sourceName.startsWith('flatfox') || this.sourceName.startsWith('homegate') || this.sourceName.startsWith('immoscout') ? 1
+              : ['von_graffenried', 'livit', 'wincasa', 'burgergemeinde'].includes(this.sourceName) ? 2
+              : 3,
+          type: ['flatfox', 'homegate', 'immoscout24', 'newhome'].includes(this.sourceName) ? 'portal'
+              : ['von_graffenried', 'livit', 'wincasa', 'burgergemeinde'].includes(this.sourceName) ? 'verwaltung'
+              : 'genossenschaft',
+          base_url: '',       // Wird nicht überschrieben wenn Zeile schon existiert
+          is_active: true,
+        },
+        { onConflict: 'name', ignoreDuplicates: false }
+      );
   }
 }
