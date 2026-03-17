@@ -10,21 +10,25 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Umgebungsvariablen prüfen – fehlen sie, ist der Server falsch konfiguriert
+// Umgebungsvariablen lesen
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
+// URL und Service-Key sind immer Pflicht (Scraper + Server)
+if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error(
     '❌ Supabase-Umgebungsvariablen fehlen! ' +
-    'Bitte SUPABASE_URL, SUPABASE_ANON_KEY und SUPABASE_SERVICE_ROLE_KEY in der .env-Datei setzen.'
+    'Bitte SUPABASE_URL und SUPABASE_SERVICE_ROLE_KEY setzen.'
   );
 }
-
-// Normaler Client (anon key) – für öffentliche Lesezugriffe
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Admin-Client (service_role key) – für Scraper und Schreiboperationen
 // ACHTUNG: Dieser Client umgeht RLS-Policies – nur im Backend verwenden!
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+
+// Normaler Client (anon key) – für öffentliche Lesezugriffe im API-Server
+// Nur verfügbar wenn SUPABASE_ANON_KEY gesetzt ist (nicht im GitHub-Actions-Scraper nötig)
+export const supabase = supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : supabaseAdmin; // Fallback: Admin-Client (im Scraper-Kontext unkritisch)
