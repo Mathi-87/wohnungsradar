@@ -39,10 +39,16 @@ export abstract class BaseScraper {
     this.http = axios.create({
       timeout: 15_000,  // 15 Sekunden Timeout
       headers: {
-        // Ehrliche Identifikation unseres Scrapers
-        'User-Agent': 'WohnungsRadar/1.0 (privat, nicht-kommerziell; kontakt@wohnungsradar.ch)',
-        'Accept': 'application/json, text/html',
-        'Accept-Language': 'de-CH,de;q=0.9',
+        // Browser-ähnliche Headers damit Portale den Request akzeptieren
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/html, */*',
+        'Accept-Language': 'de-CH,de;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
       },
     });
   }
