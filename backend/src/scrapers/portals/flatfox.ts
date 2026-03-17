@@ -91,7 +91,13 @@ export class FlatfoxScraper extends BaseScraper {
 
       let response: FlatfoxApiResponse;
       try {
-        const res = await this.http.get<FlatfoxApiResponse>(url, { params });
+        const res = await this.http.get<FlatfoxApiResponse>(url, {
+          params,
+          headers: {
+            'Referer': 'https://flatfox.ch/de/suche/',
+            'Origin': 'https://flatfox.ch',
+          },
+        });
         response = res.data;
       } catch (err) {
         console.error(`[flatfox] API-Fehler bei Seite ${offset / PAGE_SIZE + 1}:`, err);
