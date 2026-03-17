@@ -23,7 +23,7 @@ select cron.schedule(
   '0 * * * *',                     -- Cron-Ausdruck: jede Stunde um :00
   $$
   select net.http_post(
-    url     := 'https://DEINE-PROJECT-REF.supabase.co/functions/v1/scrape-all',
+    url     := 'https://kqgzugyfaagxlzyginsk.supabase.co/functions/v1/scrape-all',
     headers := jsonb_build_object(
       'Content-Type',  'application/json',
       'Authorization', 'Bearer ' || current_setting('app.service_role_key', true)
@@ -39,7 +39,7 @@ select cron.schedule(
   '30 */4 * * *',                  -- alle 4 Stunden, zur :30 Minute
   $$
   select net.http_post(
-    url     := 'https://DEINE-PROJECT-REF.supabase.co/functions/v1/scrape-all',
+    url     := 'https://kqgzugyfaagxlzyginsk.supabase.co/functions/v1/scrape-all',
     headers := jsonb_build_object(
       'Content-Type',  'application/json',
       'Authorization', 'Bearer ' || current_setting('app.service_role_key', true)
@@ -55,7 +55,7 @@ select cron.schedule(
   '0 6,18 * * *',                  -- täglich um 06:00 und 18:00 Uhr
   $$
   select net.http_post(
-    url     := 'https://DEINE-PROJECT-REF.supabase.co/functions/v1/scrape-all',
+    url     := 'https://kqgzugyfaagxlzyginsk.supabase.co/functions/v1/scrape-all',
     headers := jsonb_build_object(
       'Content-Type',  'application/json',
       'Authorization', 'Bearer ' || current_setting('app.service_role_key', true)
