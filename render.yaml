@@ -1,6 +1,6 @@
 services:
-  # Frontend: React + Vite als Static Site (kostenlos auf Render)
-  # Alle Daten kommen direkt von Supabase – kein separates Backend nötig.
+  # Frontend: React + Vite als Static Site (KOSTENLOS auf Render)
+  # Der Scraper läuft als GitHub Actions Workflow (ebenfalls kostenlos).
   - type: web
     name: wohnungsradar-frontend
     env: static

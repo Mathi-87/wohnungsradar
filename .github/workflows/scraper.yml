@@ -1,0 +1,55 @@
+# GitHub Actions Workflow: Scraper
+#
+# Dieser Workflow ersetzt den kostenpflichtigen Render-Backend-Service.
+# Er läuft stündlich und scrapt alle konfigurierten Portale (Flatfox, Homegate, ImmoScout24).
+# Die Ergebnisse werden direkt in Supabase gespeichert.
+#
+# Kosten: KOSTENLOS (GitHub Actions Free Tier = 2000 min/Monat; dieser Job ~2 min/Lauf = ~1440 min/Monat)
+#
+# Einrichtung:
+#   Repository → Settings → Secrets and variables → Actions → New repository secret
+#   - SUPABASE_URL            = https://DEINPROJEKT.supabase.co
+#   - SUPABASE_SERVICE_ROLE_KEY = eyJ... (Service Role Key, NICHT der Anon Key)
+
+name: Scraper
+
+on:
+  # Automatisch jede Stunde zur vollen Stunde
+  schedule:
+    - cron: '0 * * * *'
+
+  # Manuell auslösbar (für Tests): GitHub → Actions → Scraper → Run workflow
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    name: Inserate scrapen
+    runs-on: ubuntu-latest
+    timeout-minutes: 15  # Sicherheitsnetz: bricht nach 15 Min ab
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Backend-Abhängigkeiten installieren
+        working-directory: backend
+        run: npm ci
+
+      - name: TypeScript kompilieren
+        working-directory: backend
+        run: npm run build
+
+      - name: Scraper ausführen
+        working-directory: backend
+        env:
+          NODE_ENV: production
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node dist/run-scraper.js
