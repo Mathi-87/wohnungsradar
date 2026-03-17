@@ -260,19 +260,19 @@ INSERT INTO scrape_sources (name, tier, type, display_name, base_url, scrape_url
   ('homegate',      1, 'portal',         'Homegate.ch',       'https://www.homegate.ch',       'https://www.homegate.ch/mieten/wohnung/kanton-bern/trefferliste',   60,  'Grösste Plattform CH. Dynamisches Rendering, evtl. Puppeteer nötig.'),
   ('immoscout24',   1, 'portal',         'ImmoScout24.ch',    'https://www.immoscout24.ch',    'https://www.immoscout24.ch/de/wohnung/mieten/kanton-bern',          60,  'Zweitgrösste Plattform. Dynamisches Rendering, evtl. Puppeteer nötig.'),
   ('flatfox',       1, 'portal',         'Flatfox.ch',        'https://flatfox.ch',            'https://flatfox.ch/de/search/?east=7.647&west=7.247&north=47.05&south=46.85',  60,  'Viele kleinere Verwaltungen. Relativ offene Struktur, wahrscheinlich JSON-API vorhanden.'),
-  ('newhome',       1, 'portal',         'Newhome.ch',        'https://www.newhome.ch',        NULL,                                                                60,  'Kantonalbank-Portal.'),
+  ('newhome',       1, 'portal',         'Newhome.ch',        'https://www.newhome.ch',        'https://www.newhome.ch/de/wohnung/mieten/kanton-bern/?r=4&priceToGross=3500&sortBy=date_desc',  60,  'Kantonalbank-Portal (Neue Aargauer Bank, BEKB, etc.)'),
 
   -- Tier 2: Verwaltungen (alle 4 Stunden)
-  ('von_graffenried', 2, 'verwaltung',   'Von Graffenried AG', 'https://www.graffenried-liegenschaften.ch', NULL,                                                  240, 'Köniz, Schliern, Bern'),
-  ('livit',           2, 'verwaltung',   'Livit AG',           'https://www.livit.ch',          NULL,                                                                240, 'Bern, Köniz, Liebefeld'),
-  ('wincasa',         2, 'verwaltung',   'Wincasa AG',         'https://www.wincasa.ch',        NULL,                                                                240, 'Bern, Wabern, Köniz'),
-  ('burgergemeinde',  2, 'verwaltung',   'Burgergemeinde Bern','https://www.bgbern.ch',         NULL,                                                                240, 'Bern, Agglomeration'),
-  ('immo_stadt_bern', 2, 'verwaltung',   'Immobilien Stadt Bern', 'https://www.bern.ch',        NULL,                                                                240, 'Stadt Bern'),
-  ('pvk_bern',        2, 'verwaltung',   'PVK Bern',           'https://www.pvkbern.ch',        NULL,                                                                240, 'Bern, Umgebung. Ca. 1550 Wohnungen.'),
+  ('von_graffenried', 2, 'verwaltung',   'Von Graffenried AG', 'https://www.graffenried-liegenschaften.ch', 'https://www.graffenried-liegenschaften.ch/wohnungen-mieten/',                              240, 'Köniz, Schliern, Bern'),
+  ('livit',           2, 'verwaltung',   'Livit AG',           'https://www.livit.ch',          'https://www.livit.ch/de/mieten/wohnungen/?cantons=BE',                                              240, 'Bern, Köniz, Liebefeld'),
+  ('wincasa',         2, 'verwaltung',   'Wincasa AG',         'https://www.wincasa.ch',        'https://www.wincasa.ch/mieten/wohnungen/',                                                          240, 'Bern, Wabern, Köniz'),
+  ('burgergemeinde',  2, 'verwaltung',   'Burgergemeinde Bern','https://www.bgbern.ch',         'https://www.bgbern.ch/themen/immobilien/freie-mietobjekte/',                                        240, 'Bern, Agglomeration'),
+  ('immo_stadt_bern', 2, 'verwaltung',   'Immobilien Stadt Bern', 'https://www.bern.ch',        'https://www.bern.ch/themen/wohnen-und-quartiere/wohnraumfoerderung/mietobjekte',                    240, 'Stadt Bern'),
+  ('pvk_bern',        2, 'verwaltung',   'PVK Bern',           'https://www.pvkbern.ch',        'https://www.pvkbern.ch/topics/vermoegensanlagen/immobilien/',                                       240, 'Bern, Umgebung. Ca. 1550 Wohnungen.'),
 
   -- Tier 3: Genossenschaften (alle 12 Stunden)
-  ('fambau',         3, 'genossenschaft', 'Fambau',            'https://www.fambau.ch',         NULL,                                                                720, 'Bern, ca. 3000 Wohnungen'),
-  ('ebg_bern',       3, 'genossenschaft', 'EBG Bern',          'https://www.ebgbern.ch',        NULL,                                                                720, 'Bern, Zollikofen, ca. 700 Wohnungen'),
-  ('wogeno',         3, 'genossenschaft', 'WOGENO Bern',       'https://www.wogeno-bern.ch',    NULL,                                                                720, 'Bern, ca. 200 Wohnungen'),
-  ('wbg_neuhaus',    3, 'genossenschaft', 'WBG Neuhaus',       'https://www.wbg-neuhaus.ch',    NULL,                                                                720, 'Köniz, Schliern, Wabern, Thörishaus'),
-  ('wbg_murifeld',   3, 'genossenschaft', 'WBG Murifeld',      'https://www.wbg-murifeld.ch',   NULL,                                                                720, 'Schliern b. Köniz, 24 Wohnungen');
+  ('fambau',         3, 'genossenschaft', 'Fambau',            'https://www.fambau.ch',         'https://www.fambau.ch/wohnungen/freie-wohnungen/',                                                  720, 'Bern, ca. 3000 Wohnungen'),
+  ('ebg_bern',       3, 'genossenschaft', 'EBG Bern',          'https://www.ebgbern.ch',        'https://www.ebgbern.ch/freie-wohnungen/',                                                           720, 'Bern, Zollikofen, ca. 700 Wohnungen'),
+  ('wogeno',         3, 'genossenschaft', 'WOGENO Bern',       'https://www.wogeno-bern.ch',    'https://www.wogeno-bern.ch/freie-wohnungen/',                                                       720, 'Bern, ca. 200 Wohnungen'),
+  ('wbg_neuhaus',    3, 'genossenschaft', 'WBG Neuhaus',       'https://www.wbg-neuhaus.ch',    'https://www.wbg-neuhaus.ch/freie-wohnungen/',                                                       720, 'Köniz, Schliern, Wabern, Thörishaus'),
+  ('wbg_murifeld',   3, 'genossenschaft', 'WBG Murifeld',      'https://www.wbg-murifeld.ch',   NULL,                                                                                                720, 'Schliern b. Köniz, 24 Wohnungen');
